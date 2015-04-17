@@ -2,6 +2,8 @@
 
 SVNSlackNotifier is a lightweight, dependency-free .NET console app to send VisualSVN Server commit notifications to Slack.
 
+<img src="https://s3.amazonaws.com/scs-public/svn-slack-notification.png" alt="VisualSVN Slack Notification" width="306" height="86">
+
 ## Requirements
 
 - .NET Framework 4.5+ (uses `HttpClient`)
