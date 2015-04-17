@@ -46,4 +46,4 @@ To let SVNSlackNotifier know about commits, we need to edit the `post-commit` ho
 
 ## [Changelog](CHANGELOG.md)
 
-## [License](LICENSE)
+## [License](LICENSE.md)
