@@ -81,9 +81,9 @@ namespace SVNSlackNotifier
             payloadBody.Append("{");    // begin payload
             payloadBody.Append(" \"username\" : \"VisualSVN Server\", ");
             payloadBody.Append(" \"icon_url\" : \"http://s3.amazonaws.com/scs-public/visualsvn_96.png\", ");
-            payloadBody.Append(" \"attachments\" : [ { ");  // begin attachments            
             if (!string.IsNullOrEmpty(notification.Channel))
                 payloadBody.Append(string.Format(" \"channel\" : \"{0}\", ", notification.Channel));
+            payloadBody.Append(" \"attachments\" : [ { ");  // begin attachments            
             if (!string.IsNullOrEmpty(notification.RepositoryName))
             {
                 payloadBody.Append(string.Format(" \"fallback\" : \"[{0}] New commit by {1}: r{2}: {3}\", ", notification.RepositoryName, notification.CommitAuthor, notification.Revision, notification.CommitMessage));
