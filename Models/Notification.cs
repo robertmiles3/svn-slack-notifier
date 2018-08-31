@@ -13,6 +13,7 @@ namespace SVNSlackNotifier.Models
         // Commit-specific
         public string CommitAuthor { get; set; }
         public string CommitMessage { get; set; }
+        public string CommitChange { get; set; }
 
         // Slack-specific
         public string Channel { get; set; }

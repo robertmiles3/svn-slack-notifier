@@ -66,15 +66,19 @@ namespace SVNSlackNotifier
             // Get some more data about this commit via "svnlook"
             notification.CommitMessage = CommandLineHelper.ExecuteProcess(ConfigurationHelper.SVNLookProcessPath, string.Format("log -r {0} {1}", notification.Revision, notification.RepositoryPath));
             notification.CommitAuthor = CommandLineHelper.ExecuteProcess(ConfigurationHelper.SVNLookProcessPath, string.Format("author -r {0} {1}", notification.Revision, notification.RepositoryPath));
+            notification.CommitChange = CommandLineHelper.ExecuteProcess(ConfigurationHelper.SVNLookProcessPath, string.Format("changed --copy-info -r {0} {1}", notification.Revision, notification.RepositoryPath));
 
             // Ensure valid formatting of message
-            if(notification.CommitMessage.Contains("\""))
+            if (notification.CommitMessage.Contains("\""))
                 notification.CommitMessage = notification.CommitMessage.Replace("\"", "\\\"");
             if (notification.CommitAuthor.Contains("\""))
                 notification.CommitAuthor = notification.CommitAuthor.Replace("\"", "\\\"");
+            if (notification.CommitChange.Contains("\""))
+                notification.CommitChange = notification.CommitChange.Replace("\"", "\\\"");
             // Trim off unnecessary trailing CRLFs
             notification.CommitMessage = notification.CommitMessage.TrimEnd(new char[] { '\r', '\n' });
             notification.CommitAuthor = notification.CommitAuthor.TrimEnd(new char[] { '\r', '\n' });
+            notification.CommitChange = notification.CommitChange.TrimEnd(new char[] { '\r', '\n' });
 
             // Use advanced message formatting for incoming webhooks
             var payloadBody = new StringBuilder();
@@ -86,12 +90,12 @@ namespace SVNSlackNotifier
             payloadBody.Append(" \"attachments\" : [ { ");  // begin attachments            
             if (!string.IsNullOrEmpty(notification.RepositoryName))
             {
-                payloadBody.Append(string.Format(" \"fallback\" : \"[{0}] New commit by {1}: r{2}: {3}\", ", notification.RepositoryName, notification.CommitAuthor, notification.Revision, notification.CommitMessage));
+                payloadBody.Append(string.Format(" \"fallback\" : \"[{0}] New commit by {1}: r{2}: {3}\n\n{4}\", ", notification.RepositoryName, notification.CommitAuthor, notification.Revision, notification.CommitMessage, notification.CommitChange));
                 payloadBody.Append(string.Format(" \"pretext\" : \"[{0}] New commit by {1}\", ", notification.RepositoryName, notification.CommitAuthor));
             }
             else
             {
-                payloadBody.Append(string.Format(" \"fallback\" : \"New commit by {0}: r{1}: {2}\", ", notification.CommitAuthor, notification.Revision, notification.CommitMessage));
+                payloadBody.Append(string.Format(" \"fallback\" : \"New commit by {0}: r{1}: {2}\n\n{3}\", ", notification.CommitAuthor, notification.Revision, notification.CommitMessage, notification.CommitChange));
                 payloadBody.Append(string.Format(" \"pretext\" : \"New commit by {0}\", ", notification.CommitAuthor));
             }
             if (!string.IsNullOrEmpty(notification.RepositoryURL))
@@ -99,10 +103,10 @@ namespace SVNSlackNotifier
                 if (notification.RepositoryURL.Contains("/svn/"))
                     notification.RepositoryURL = notification.RepositoryURL.Replace("/svn/", "/!/#");
                 notification.RepositoryURL += "/commit/r" + notification.Revision;
-                payloadBody.Append(string.Format(" \"text\" : \"<{0}|r{1}>: {2}\", ", notification.RepositoryURL, notification.Revision, notification.CommitMessage));
+                payloadBody.Append(string.Format(" \"text\" : \"<{0}|r{1}>: {2}\n\n{3}\", ", notification.RepositoryURL, notification.Revision, notification.CommitMessage, notification.CommitChange));
             }
             else
-                payloadBody.Append(string.Format(" \"text\" : \"r{0}: {1}\", ", notification.Revision, notification.CommitMessage));
+                payloadBody.Append(string.Format(" \"text\" : \"r{0}: {1}\n\n{2}\", ", notification.Revision, notification.CommitMessage, notification.CommitChange));
             payloadBody.Append(" \"color\" : \"#3886C0\" ");
             payloadBody.Append("} ]"); // end attachments
             payloadBody.Append("}"); // end payload
