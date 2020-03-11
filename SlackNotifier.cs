@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.ServicePointManager;
 using System.Text;
 using System.Threading.Tasks;
 using SVNSlackNotifier.Helpers;
@@ -28,6 +29,9 @@ namespace SVNSlackNotifier
                     Logger.Shared.WriteError("Missing revision number");
                 else
                 {
+                    // Supporting protocol TLS 1.0 / 1.1 / 1.2
+                    SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
                     // Post to Slack
                     using (var client = new HttpClient())
                     {
