@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,9 @@ namespace SVNSlackNotifier
                     Logger.Shared.WriteError("Missing revision number");
                 else
                 {
+
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    
                     // Post to Slack
                     using (var client = new HttpClient())
                     {
