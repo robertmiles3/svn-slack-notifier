@@ -1,4 +1,21 @@
-﻿# SVNSlackNotifier
+2020년 3월 이후로 TLS 1.2 미만을 허용하지 않도록 Slack 정책이 변경되었습니다.
+그로 인해 정상 발신 되지 않고 다음과 같은 오류가 발생했습니다.
+
+----------------------------------------
+2021-04-22 09:58:12    [ERROR]    
+이 요청을 보내는 동안 오류가 발생했습니다.
+요청이 중단되었습니다. 
+SSL/TLS 보안 채널을 만들 수 없습니다.
+----------------------------------------
+
+TLS 1.2 버전을 사용하도록 명시하는 코드 한 줄만 추가하였습니다.
+정상 작동됨을 확인하였습니다.
+
+2021.04.22 hj-rich
+
+ 
+ 
+ # SVNSlackNotifier
 
 SVNSlackNotifier is a lightweight, dependency-free .NET console app to send VisualSVN Server commit notifications to Slack.
 
